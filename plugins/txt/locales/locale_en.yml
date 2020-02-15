@@ -2,34 +2,61 @@
 en:
   txt:
 
-      txt_target_missing: "Beep boop: To whom shall I send this message?"
-      cant_txt_ignored: "You can't txt %{names} because you're on their ignore list."
-      recipient_do_not_disturb: "%{name} is set 'do not disturb' right now.  Please try your text again later."
-      target_offline_no_scene: "%{name} is not connected and you did not specify a scene."
+      txt_target_missing: "%{txt_error_indicator} no user provided"
+      cant_txt_ignored: "%{txt_error_indicator} msg has been blocked - one of these users is trying to ignore you: %{names}"
+      recipient_do_not_disturb: "%{txt_error_indicator} %{name} is set 'do not disturb' right now -  please try to message again later"
+      target_offline_no_scene: "%{txt_error_indicator} %{name} is not connected - to message an offline user, use a command that provides a scene number (see `help %{txt_cmd} for more details)"
 
-      txt_to_sender: "%{txt} %{sender}%xn: %{message}%xn"
-      txt_to_recipient: "%{txt} %{sender}%xn: %{message}%xn"
-      txt_to_recipient_with_scene: "%{txt} %xh%{sender}%xn: %{message} %xx%xh(Scene %{scene_id})%xn"
+      # Is %xn needed after the postfix?
+      txt_to_sender: "%{txt_indicator_prefix}%{txt_indicator_outgoing_delimiter}%{sender}%{txt_indicator_postfix} %{message}%xn"
+      txt_to_recipient: "%{txt_indicator_prefix}%{txt_indicator_incoming_tag_delim}%{sender}%{txt_indicator_postfix} %{message}%xn"
+      txt_to_recipient_with_scene: "%{txt_indicator_prefix}%{txt_indicator_incoming_tag_delim}%xh%{sender}%xn %xx%xh(%{scene_id})%{txt_indicator_postfix} %{message}%xn"
 
-      recipient_added_to_scene: "That text has added %{name} to the scene participants list."
-      txt_to_scene_with_recipient: "%{txt} %xh%xw %{sender}%xn: %{message}%xn"
-      txt_to_scene_no_recipient: "%{txt} %xh%xw %{sender}%xn: %{message}%xn"
-      no_such_character: "No character found by that name."
+      recipient_added_to_scene: "%{txt_info_indicator} that message has given %{name} scene access - aka %{name} added to the scene participants list"
+      txt_to_scene_with_recipient: "%{txt_indicator_prefix}%{txt_indicator_incoming_tag_delim}%xh%xw%{sender}%xn%{txt_indicator_postfix} %{message}%xn"
+      txt_to_scene_no_recipient: "%{txt_to_scene_no_recipient}"
+      no_such_character: "%{txt_error_indicator} no user(s) found by the name(s): %{names}"
 
-      no_one_to_reply_to: "Looks like no one's txt'd you recently. Sorry."
-      reply_scene: "Last txt came from: %{names}; Scene: %{scene}"
-      reply: "Last txt came from: %{names}"
+      no_one_to_reply_to: "%{txt_error_indicator} no users have messaged you recently"
+      reply_scene: "%{txt_info_indicator} last message  received - sender(s): %{names}; scene: %{scene}"
+      reply: "%{txt_info_indicator} last message recieved - sender(s): %{names}"
 
       recipient_indicator: "%{recipients}"
 
-      txt_indicator: "%{color}%{start_marker}TXT to %{recipients}%{color}%{end_marker}%xn"
+      txt_indicator: "%{txt_indicator_prefix}%{txt_indicator_outgoing_tag_delim}%{recipients}%{color}%{txt_end_postfix}%xn"
 
-      color_set: "Txts will now appear with this marker: %{option}%%%xn"
+      color_set: "%{txt_info_indicator} messages will now appear as: %{option}%%%xn"
 
-      scene_not_running: "That scene isn't running.  You'll need to restart it if you want to txt into it."
-      scene_no_access: "You do not have access to txt into that scene. Ask the participants to add you. (Try: scene/addchar #=character )"
-      scene_not_found: "No scene found by that number."
+      scene_not_running: "%{txt_error_indicator} scene `%{txt_cmd}` protocol is down at this time - restart it to regain `%{txt_cmd}` capability"
+      scene_no_access: "%{txt_error_indicator} no security clearance to use that scene's `${txt_cmd}` protocol - to gain security clearance, ask participants to add you via `scene/addchar <scene_#>=<character>`"
+      scene_not_found: "%{txt_error_indicator} no scene with that number exists."
 
-      incorrect_format: "That's not the correct format. Please use `name(s)=message`"
+      incorrect_format: "%{txt_error_indicator} incorrect format; does not compute - please use `<name(s)>=<message>`"
 
-      txt_new_scene_target_missing: "Please specify a target and message. Ex: txt/newscene Name=Message"
+      txt_new_scene_target_missing: "%{txt_error_indicator} missing target scene and message - `%{txt_cmd}/newscene <name>=<message>` (see more scene oriented %{txt_cmd} commands, see `help %{text_cmd}` or `help txt`)"
+
+      # This allows admin to reskin the plugin command in all places, including command messages and help text
+      txt_cmd: "msg"
+
+      # All of the optional settings below allow admin to use composition to create a consistent message scheme while avoiding human error.
+      # It also makes it easier to change standard formatting in one place, which makes it easier to maintain.plugins/txt/locales/locale_en.yml
+      # To not use these, just don't use them in the settings for various messages.
+      txt_indicator_tag: "MSG"
+      txt_start_marker: "["
+      txt_end_marker: "]"
+      # Some players prefer to be able to filter out all ooc errors and messages, so it's good practice not to use page markers, though that is the default
+      txt_ooc_start_marker: "<"
+      txt_ooc_end_marker: ">"
+      # Some admin prefer more IC like error messages for ooc messaging
+      # Using a 'prompt' can still allow for that in tech-themed games without resorting to the ooc markers or sacrificing client filter-ability
+      txt_prompt: "%{sender}$ "
+
+      txt_indicator_tag_delim: " | "
+      txt_indicator_incoming_tag_delim: " << "
+      txt_indicator_outgoing_tag_delim: " >> "
+
+      txt_indicator_prefix: "%{color}%{txt_start_marker}%{txt_indicator_tag}"
+      txt_indicator_postfix: "%{txt_stop_marker}%{color}"
+
+      txt_info_indicator: "%{color}%{txt_start_marker}%{txt_indicator_tag}%{txt_indicator_tag_delim}INF%{color}%{txt_end_marker} %{txt_prompt}"
+      txt_error_indicator: "%{color}%{txt_start_marker}%{txt_indicator_tag}%{txt_indicator_tag_delim}ERR%{color}%{txt_end_marker} %{txt_prompt}Beep boop!"
