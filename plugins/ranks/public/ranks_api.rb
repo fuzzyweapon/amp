@@ -32,9 +32,9 @@ module AresMUSH
         last_name = names[-1]
       end
       rank_str = char.rank.blank? ? "" : "#{char.rank} "
-      callsign = char.demographic(:callsign)
-      callsign_str =  callsign.blank? ? "" : "\"#{callsign}\" "
-      "#{rank_str}#{first_name} #{callsign_str}#{last_name}"
+      nickname = Demographics.nickname(char)
+      nickname_str =  nickname.blank? ? "" : "\"#{nickname}\" "
+      "#{rank_str}#{first_name} #{nickname_str}#{last_name}"
     end
     
     def self.set_rank(char, rank, allow_all = false)

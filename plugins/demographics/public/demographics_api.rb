@@ -27,6 +27,12 @@ module AresMUSH
     def self.private_demographics
       Global.read_config("demographics", "private_properties") || []
     end
+
+    def self.nickname(char)
+      return nil if !char
+      nickname_field = Global.read_config("demographics", "nickname_field") || ""
+      return !nickname_field.blank? ? char.demographic(nickname_field) || "" : ""
+    end
     
     def self.name_and_nickname(char)
       return nil if !char
